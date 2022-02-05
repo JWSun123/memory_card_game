@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap');
+
+body{
+    font-family: 'Source Code Pro', monospace;
+    font-size: large;
+}
 .bgGrey{
     background-color: #323232;
 }
@@ -12,4 +19,20 @@
 }
 .colorGrey{
     color:#323232;
+}
+.btn{
+    font-family: 'VT323', monospace;
+    font-size:x-large;
+    font-weight: 900;
+}
+.btn:hover{
+    background-color : #8c857b;
+    color : #f2b138;
+}
+h1{
+    font-family: 'VT323', monospace;
+    font-weight: 900;
+}
+h2{
+    font-weight: 700;
 }
