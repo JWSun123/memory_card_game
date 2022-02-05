@@ -20,6 +20,9 @@ body{
 .colorGrey{
     color:#323232;
 }
+.colorSand{
+    color: #d9ae79;
+}
 .btn{
     font-family: 'VT323', monospace;
     font-size:x-large;
@@ -35,4 +38,12 @@ h1{
 }
 h2{
     font-weight: 700;
+}
+.card{
+    margin: 2px;
+    padding: 0px;
+    width : 24.50%;
+    height: auto;
+    display: inline-block;
+
 }
