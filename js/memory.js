@@ -45,10 +45,10 @@ function unflip(){
 // if the value of two cards are the same, it's match.
 function isMatch(firstFlip, secondFlip){
     if (firstFlip.getAttribute("value") === secondFlip.getAttribute("value")){
-        let timerDisappear = setTimeout(disappear, 800)
+        let timerDisappear = setTimeout(disappear, 300)
     }
     else{
-        let timerUnflip = setTimeout(unflip, 800)
+        let timerUnflip = setTimeout(unflip, 300)
     }
 }
 
