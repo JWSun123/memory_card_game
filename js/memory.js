@@ -15,11 +15,11 @@ $(document).ready(()=>{
 
 
 
-//event listener: click a card, switch to the back image.
-
 let firstFlip;
 let secondFlip;
+// variable flipped: if there is already a card flipped: true, else: false.
 let flipped = false;
+
 function flip(){
     this.style.display = "none";
     if (!flipped){
@@ -32,14 +32,17 @@ function flip(){
         isMatch(firstFlip, secondFlip);
     }
 }
+// if two cards flipped are match, both cards disappear.
 function disappear(){
     firstFlip.style.display = "none";
     secondFlip.style.display = "none";
 }
+// if two cards flipped are not match, both cards unflip.
 function unflip(){
     firstFlip.previousElementSibling.style.display = "";
     secondFlip.previousElementSibling.style.display = "";
 }
+// if the value of two cards are the same, it's match.
 function isMatch(firstFlip, secondFlip){
     if (firstFlip.getAttribute("value") === secondFlip.getAttribute("value")){
         let timerDisappear = setTimeout(disappear, 800)
@@ -49,6 +52,21 @@ function isMatch(firstFlip, secondFlip){
     }
 }
 
+// a function to shuffle the card randomly
+let cardContainers = document.querySelectorAll(".imageContainer")
+function shuffleCards(){
+    for(let i = 0; i < cardContainers.length; i++){
+        let randomNum = Math.floor(Math.random() * 16);
+        cardContainers[i].style.order = randomNum;
+    }
+}
+
+// event listener: shuffle cards everytime the page is reload.
+ window.addEventListener("load", shuffleCards)
+
+// event listener: click a card, flip it.
 let front = document.querySelectorAll(".front");
 for (let i = 0; i < front.length; i++){
     front[i].addEventListener("click", flip)}
+
+    
