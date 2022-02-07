@@ -14,7 +14,8 @@ $(document).ready(()=>{
 })
 
 
-
+let front = document.querySelectorAll(".front");
+let back = document.querySelectorAll(".back");
 let firstFlip;
 let secondFlip;
 // variable flipped: if there is already a card flipped: true, else: false.
@@ -61,12 +62,25 @@ function shuffleCards(){
     }
 }
 
+// a function to reset the game
+function resetGame(){
+    shuffleCards();
+    firstFlip = null;
+    secondFlip = null;
+    flipped = false;
+    for (let i = 0; i < front.length; i++){
+        front[i].style.display = ""}
+    for (let i = 0; i < back.length; i++){
+        back[i].style.display = ""}
+}
+
 // event listener: shuffle cards everytime the page is reload.
  window.addEventListener("load", shuffleCards)
 
 // event listener: click a card, flip it.
-let front = document.querySelectorAll(".front");
 for (let i = 0; i < front.length; i++){
     front[i].addEventListener("click", flip)}
 
-    
+// event listener: reset the game when user clicks START PLAY button.
+let button = document.getElementById("startBtn");
+button.addEventListener("click", resetGame)
