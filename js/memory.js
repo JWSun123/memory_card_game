@@ -2,13 +2,16 @@
 
 $(document).ready(()=>{
     $('.easy').on('click',function(){
+        resetGame();
         $('.hide').hide();
     })
     $('.medium').on('click',function(){
+        resetGame();
         $('.hide').show();
         $('.hidden').hide();
     })
     $('.hard').on('click',()=>{
+        resetGame();
         $('.hide').show();
     })
 })
