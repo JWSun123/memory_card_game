@@ -39,11 +39,15 @@ h1{
 h2{
     font-weight: 700;
 }
-.card{
-    margin: 2px;
-    padding: 0px;
-    width : 24.50%;
-    height: auto;
-    display: inline-block;
-
+.imageContainer{
+    position: relative;
+    margin-bottom: 2%;
+}
+.front{
+    position: absolute;
+    z-index: 1;
+}
+.back{
+    width: 200px;
+    height: 200px;
 }
