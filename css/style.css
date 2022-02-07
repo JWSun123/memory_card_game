@@ -40,14 +40,18 @@ h2{
     font-weight: 700;
 }
 .imageContainer{
-    position: relative;
-    margin-bottom: 2%;
+    margin-bottom: 5%;
 }
 .front{
+    width: 200px;
+    height: 200px;
     position: absolute;
     z-index: 1;
 }
 .back{
     width: 200px;
     height: 200px;
+}
+img:hover{
+    transform: scale(0.95);
 }
