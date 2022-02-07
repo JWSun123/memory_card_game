@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<title>Play the memory game</title>
+	<link rel="stylesheet" href="/css/style.css" />
+    <style> /*to put in external sheet*/
+    </style>
+</head>
+<body class = "bgGrey container">
+    <header class="row pt-2 pb-1 mb-3 bgYellow">
+        <h1 class="colorGrey col-6 text-center text-md-start">Memory Card Game</h1>
+        <div class="col-2"><a href="#" id="easy" class="col-12 btn bgGrey colorWhite">EASY</a></div>
+        <div class="col-2"><a href="#" id="medium" class="col-12 btn bgGrey colorWhite">MEDIUM</a></div>
+        <div class="col-2"><a href="#" id="hard" class="col-12 btn bgGrey colorWhite">HARD</a></div>
+    </header>
+    <main class="container-fluid">
+        <div class="row">
+            <div id="game" class="col-10">
+                <div class = "row">
+                        <img id = "front" class="col-3 card easy" src="https://picsum.photos/200/200" alt="1"/>
+                        <!-- <img id = "back" class = "col-3 card" src="images/img1.jpeg" alt = "" /> -->
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="2" />
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="3" />
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="4" />
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="5" />
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="6" />
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="7" />
+                        <img class="col-3 card easy" src="https://picsum.photos/200/200" alt="8" />
+                        <img class="col-3 card medium" src="https://picsum.photos/200/201" alt="9" />
+                        <img class="col-3 card medium" src="https://picsum.photos/200/201" alt="10" />
+                        <img class="col-3 card hard" src="https://picsum.photos/200/200" alt="11" />
+                        <img class="col-3 card hard" src="https://picsum.photos/200/200" alt="12" />
+                </div>
+                <div class=" justify-content-center text-center">
+                    <a href="#" id="playBtn" class="btn bgYellow colorGrey mt-3">START PLAY</a> <!-- I changed href=# because I didn't want it to reload the whole page for now-->
+                    <a href="#" id="retryBtn" class="btn bgYellow colorGrey mt-3">Try again</a>
+                </div>
+            </div>
+            <div id="stats" class="col-2 colorSand" >
+                <ul><h2>Time</h2>
+                    <li id="time"><p id="minute">0</p>:<p id="second">00</p></li>
+                </ul>
+                <ul><h2>Count</h2>
+                    <li id="count"></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <script>
+        //click playbtn, set time to 0:00(stored value should be reset), count++(global), randomize the cards(video used order to be assigned a random number(flex property)).
+        let count = document.getElementById("count");
+        let countNumber = 0;
+        count.innerHTML = countNumber;
+        let timerMinute = document.getElementById("minute");
+        let timerSecond = document.getElementById("second");
+        let totalSecond = 0;
+        let timerWin;
+        let easyClicked = 0;
+        let timerStart;
+
+        function startGame(){
+            ++countNumber;
+            count.innerText = countNumber;
+            timerStart = setInterval(startTimer, 1000);
+        }
+
+        function startTimer(){
+            console.log("timer!")
+            if (easyClicked == 0){
+                ++totalSecond;
+                timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
+                timerSecond.innerText = timerLogic(totalSecond % 60);
+            } else {
+                console.log("easy has been clicked and timer should stop")
+                clearInterval(timerStart);
+                storeTimer(timerMinute.innerText, timerSecond.innerText);
+            }
+
+        }
+        function timerLogic(totalSecond){
+            let timer = totalSecond + "";
+            if (timer.length < 2) {
+                return "0" + timer;
+            } else {
+                return timer;
+            }
+            /*let timer = totalSecond;
+            return timer;*/
+        }
+
+        //To store the time for the pop-up
+        function storeTimer(minute, second){
+            console.log(minute + " : " + second);
+        }
+
+        //Will change the structure of the game.
+        function easyGame(){
+            easyClicked = 1;
+            //let mediumImages = document.querySelectorAll("img .medium");
+            //mediumImages.style.display = "none";
+            console.log("I'm in easy")
+            hideImg();
+        }
+
+        function hideImg(){
+            let mediumImages = document.querySelectorAll(".medium");
+            for (let i = 0, len = mediumImages.length; i < len; i++) {
+                mediumImages.style.display = "none";
+            }
+            
+            
+        }
+
+        function mediumGame(){
+
+        }
+
+        function hardGame(){
+
+        }
+        //click card, face of card exposed and stay. click second card, face of card exposed. If same card(using alt maybe?), stay exposed.
+        //If not same card, flip both cards back to cover. DISABLE click on other cards until we see the cover(Maybe allow the user to click on other cards by setting a timer after the second card click).
+        //When all cards has been found. Pop up to congratulate the user something like : "Congratulations, you finish the game in " + time 
+        // For time: when the game starts by click playbtn, timer must start now. When game is over, time must stop and store that value for the pop-up.
+        //Maybe we can keep track of the time at each plays? (+++bonus)
+
+        //event listeners
+        document.getElementById("playBtn").addEventListener("click", startGame);
+        document.getElementById("playBtn").addEventListener("click", startTimer);
+        document.getElementById("retryBtn").addEventListener("click", storeTimer);
+        document.getElementById("easy").addEventListener("click", easyGame);
+        document.getElementById("medium").addEventListener("click", mediumGame);
+        document.getElementById("hard").addEventListener("click", hardGame);
+    </script>
+</body>
+</html>
