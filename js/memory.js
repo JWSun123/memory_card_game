@@ -35,7 +35,6 @@ function flip(){
         flipped = false;
         secondFlip = this.nextElementSibling;
         isMatch(firstFlip, secondFlip);
-        checkWin();
     }
     
 }
@@ -52,7 +51,8 @@ function unflip(){
 // if the value of two cards are the same, it's match.
 function isMatch(firstFlip, secondFlip){
     if (firstFlip.getAttribute("value") === secondFlip.getAttribute("value")){
-        let timerDisappear = setTimeout(disappear, 300)
+        let timerDisappear = setTimeout(disappear, 300);
+        checkWin();
     }
     else{
         let timerUnflip = setTimeout(unflip, 300)
@@ -61,6 +61,7 @@ function isMatch(firstFlip, secondFlip){
 
 function checkWin(){
     win = true;
+
     for (let i = 0; i < back.length; i++){
         if (back[i].style.display != "none"){
             win = false;
