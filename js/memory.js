@@ -8,12 +8,12 @@ let totalSecond;
 //let timerWin; // NOT USED YET.
 let timerStart;
 let imgCount = 0;
-
+let level;
 //3 levels of diffuculties
 
 $(document).ready(()=>{
     $('.easy').on('click',function(){
-        imgCount = 0;
+        level = "easy";
         resetGame();
         resetTimer();
         $('.hide').hide();
@@ -21,7 +21,7 @@ $(document).ready(()=>{
         
     })
     $('.medium').on('click',function(){
-        imgCount = 0;
+        level = "medium"
         resetGame();
         resetTimer();
         $('.hide').show();
@@ -29,7 +29,7 @@ $(document).ready(()=>{
         $('.hidden').children().hide();
     })
     $('.hard').on('click',()=>{
-        imgCount = 0;
+        level = "hard";
         resetGame();
         resetTimer();
         $('.hide').show();
@@ -45,6 +45,7 @@ let secondFlip;
 // variable flipped: if there is already a card flipped: true, else: false.
 let flipped = false;
 let win;
+
 function flip(){
     playGame();
     this.style.display = "none";
@@ -56,7 +57,6 @@ function flip(){
         flipped = false;
         secondFlip = this.nextElementSibling;
         isMatch(firstFlip, secondFlip);
-        checkWin();
     }
     
 }
@@ -64,7 +64,12 @@ function flip(){
 function disappear(){
     firstFlip.style.display = "none";
     secondFlip.style.display = "none";
-    checkWin();
+    if(checkWin()){
+        stopTimer();
+        document.getElementById("congrat").classList.remove("d-none")
+        document.getElementById("result").innerText = "You finish the game in " + finishTime; //TODO : MAKE IT SO IT'S THE STORED TIME
+        document.getElementById("startBtn").innerText = "PLAY AGAIN";
+    };
 }
 // if two cards flipped are not match, both cards unflip.
 function unflip(){
@@ -88,12 +93,7 @@ function checkWin(){
             win = false;
         }
     }
-    if (win){
-        stopTimer();
-        document.getElementById("congrat").classList.remove("d-none")
-        document.getElementById("result").innerText = "You finish the game in " + finishTime; //TODO : MAKE IT SO IT'S THE STORED TIME
-    }
-    console.log(win)
+    return win;
 }
 // a function to shuffle the card randomly
 let cardContainers = document.querySelectorAll(".imageContainer")
@@ -110,39 +110,54 @@ function resetGame(){
     firstFlip = null;
     secondFlip = null;
     flipped = false;
+    imgCount = 0; 
+    resetTimer();
     document.getElementById("congrat").classList.add("d-none");
     document.getElementById("result").innerText = "";
+    document.getElementById("startBtn").innerText = "START PLAY";
+    
     for (let i = 0; i < front.length; i++){
         front[i].style.display = ""}
     for (let i = 0; i < back.length; i++){
         back[i].style.display = ""}
+
+    if (level == "easy"){
+        $('.hide').hide();
+        $('.hide').children().hide();
+    }
+    else if (level == "medium"){
+        $('.hide').show();
+        $('.hidden').hide();
+        $('.hidden').children().hide();
+    }
+    else{
+        $('.hide').show();
+    }
+    
 }
 
 //function to start the game.
-function playGame(){
+function playGame(){ 
     imgCount++;
     if (imgCount == 1) {
         ++countNumber;
         count.innerText = countNumber;
         totalSecond = 0;
-        timerStart = setInterval(startTimer, 1000);
-        resetGame();
+        startTimer();
     }
 }
 
 // a function to start the timer
 function startTimer(){    
-    if (!win){ 
-        ++totalSecond;
-        timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
-        timerSecond.innerText = timerLogic(totalSecond % 60);
-    } else {
-        console.log("win has been clicked and timer should stop")
-        stopTimer();
-        
-    }
+    timerStart = setInterval(timer, 1000);
+    
 }
 
+function timer(){    
+    ++totalSecond;
+    timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
+    timerSecond.innerText = timerLogic(totalSecond % 60);  
+}
 //Stops timer when you click on <h2>Time</h2>. A function to stop the timer.
 function stopTimer(){
     clearInterval(timerStart);
@@ -181,9 +196,7 @@ for (let i = 0; i < front.length; i++){
 
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
-startButton.addEventListener("click", playGame);
-let againButton = document.getElementById("againBtn");
-againButton.addEventListener("click", playGame);
+startButton.addEventListener("click", resetGame);
 
 
 let winBtn = document.querySelector("#winBtn");
