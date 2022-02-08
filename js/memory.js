@@ -15,11 +15,13 @@ $(document).ready(()=>{
     $('.easy').on('click',function(){
         resetGame();
         $('.hide').hide();
+        $('.hide').children().hide();
     })
     $('.medium').on('click',function(){
         resetGame();
         $('.hide').show();
         $('.hidden').hide();
+        $('.hidden').children().hide();
     })
     $('.hard').on('click',()=>{
         resetGame();
