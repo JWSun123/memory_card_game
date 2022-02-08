@@ -152,7 +152,10 @@ for (let i = 0; i < front.length; i++){
     front[i].addEventListener("click", flip)}
 
 // event listener: reset the game when user clicks START PLAY button.
-let button = document.getElementById("startBtn");
-button.addEventListener("click", resetGame)
+let startButton = document.getElementById("startBtn");
+startButton.addEventListener("click", resetGame);
+let againButton = document.getElementById("againBtn");
+againButton.addEventListener("click", resetGame);
+
 let easyBtn = document.querySelector("#time");
 easyBtn.addEventListener("click", stopTimer);

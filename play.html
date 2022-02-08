@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -90,14 +91,22 @@
                 <div class=" justify-content-center text-center">
                     <button id = "startBtn" type = "button" class="btn bgYellow colorGrey mt-3 mb-3">START PLAY</button>
                 </div>
+                <section id = "congrat" class = "d-none">
+                    <div class = "bgYellow colorGrey">
+                        <h2>CONGRATULATIONS!</h2>
+                        <p id = "result"></p>
+                    </div>
+                    <button id = "againBtn" type = "button" class="btn bgYellow colorGrey mt-3 mb-3">PLAY AGAIN</button>
+                    
+                </section>
             </div>
             <div id="stats" class="col-2 colorSand" >
-                <ul><h2>Time</h2>
-                    <li id="time"></li>
-                </ul>
-                <ul><h2>Count</h2>
-                    <li id="time"></li>
-                </ul>
+                <h2 id="time">Time</h2>
+                    <span id="minute">00</span>:<span id="second">00</span>
+                
+                <h2>Count</h2>
+                    <span id="count">0</span>
+                
             </div>
         </div>
     </main>
