@@ -1,19 +1,25 @@
 //Declaration of variable for the timer and counter.
-let count = document.getElementById("count");
+let count = document.getElementById("countHard");
 let countNumber = 0;
-count.innerHTML = countNumber;
+let countNumberMedium = 0;
+let countNumberHard = 0;
+let totalCountNumber;
+count.innerHTML = countNumberHard;
 let timerMinute = document.getElementById("minute");
 let timerSecond = document.getElementById("second");
 let totalSecond;
-//let timerWin; // NOT USED YET.
 let timerStart;
 let imgCount = 0;
-let level;
+let level = "hard"; //I set it to hard because when the page load, we see 16 cards
+let lvlText = document.getElementById("level");
+changeLevelName(level);
 //3 levels of diffuculties
 
 $(document).ready(()=>{
     $('.easy').on('click',function(){
         level = "easy";
+        changeLevelName(level);
+        count = document.getElementById("count");
         resetGame();
         resetTimer();
         $('.hide').hide();
@@ -21,7 +27,9 @@ $(document).ready(()=>{
         
     })
     $('.medium').on('click',function(){
-        level = "medium"
+        level = "medium";
+        changeLevelName(level);
+        count = document.getElementById("countMedium");
         resetGame();
         resetTimer();
         $('.hide').show();
@@ -30,12 +38,14 @@ $(document).ready(()=>{
     })
     $('.hard').on('click',()=>{
         level = "hard";
+        changeLevelName(level);
+        count = document.getElementById("countHard");
         resetGame();
         resetTimer();
         $('.hide').show();
     })
 })
-// time used to finish the game. --feel free to change.
+// time used to finish the game. 
 let finishTime;
 
 let front = document.querySelectorAll(".front");
@@ -67,7 +77,7 @@ function disappear(){
     if(checkWin()){
         stopTimer();
         document.getElementById("congrat").classList.remove("d-none")
-        document.getElementById("result").innerText = "You finish the game in " + finishTime; //TODO : MAKE IT SO IT'S THE STORED TIME
+        document.getElementById("result").innerText = "You finished the game in " + finishTime + " and you have played " + addCountNumber() + " " + isPlural() + ".";
         document.getElementById("startBtn").innerText = "PLAY AGAIN";
     };
 }
@@ -138,10 +148,23 @@ function resetGame(){
 
 //function to start the game.
 function playGame(){ 
+    if (document.getElementById("startBtn").innerText === "PLAY AGAIN") {
+        resetGame();
+    }
     imgCount++;
     if (imgCount == 1) {
-        ++countNumber;
-        count.innerText = countNumber;
+        if (count.id == "count"){
+            count.innerHTML = ++countNumber;
+            //++countNumber;
+        } else if (count.id == "countMedium"){
+            count.innerHTML = ++countNumberMedium;
+            //++countNumberMedium;
+        } else if (count.id == "countHard"){
+            count.innerHTML = ++countNumberHard;
+            //++countNumberHard;
+        }
+        
+        //count.innerText = countNumber;
         totalSecond = 0;
         startTimer();
     }
@@ -184,7 +207,27 @@ function timerLogic(totalSecond){
 
 //A function to store the time for the win pop-up.
 function storeTimer(minute, second){
-    return minute + " : " + second;
+    return minute + ":" + second;
+}
+
+//A function to change the name of the level and capitalize its first letter.
+function changeLevelName(level){
+    level = level.charAt(0).toUpperCase() + level.slice(1);
+    lvlText.innerText = level;
+}
+
+//A function to change the a word to plural.
+function isPlural(){
+    if(countNumber > 1) {
+        return "times";
+    } else {
+        return "time";
+    }
+}
+
+//A function to obtain the total count.
+function addCountNumber(){
+    return totalCountNumber = countNumber + countNumberMedium + countNumberHard;
 }
 
 // event listener: shuffle cards everytime the page is reload.
@@ -196,8 +239,6 @@ for (let i = 0; i < front.length; i++){
 
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
-startButton.addEventListener("click", resetGame);
+startButton.addEventListener("click", playGame);
 
 
-let winBtn = document.querySelector("#winBtn");
-winBtn.addEventListener("click", stopTimer);
