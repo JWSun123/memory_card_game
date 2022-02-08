@@ -15,7 +15,8 @@ $(document).ready(()=>{
         $('.hide').show();
     })
 })
-
+// time used to finish the game. --feel free to change.
+let finishTime;
 
 let front = document.querySelectorAll(".front");
 let back = document.querySelectorAll(".back");
@@ -23,7 +24,7 @@ let firstFlip;
 let secondFlip;
 // variable flipped: if there is already a card flipped: true, else: false.
 let flipped = false;
-
+let win;
 function flip(){
     this.style.display = "none";
     if (!flipped){
@@ -34,7 +35,9 @@ function flip(){
         flipped = false;
         secondFlip = this.nextElementSibling;
         isMatch(firstFlip, secondFlip);
+        checkWin();
     }
+    
 }
 // if two cards flipped are match, both cards disappear.
 function disappear(){
@@ -56,6 +59,19 @@ function isMatch(firstFlip, secondFlip){
     }
 }
 
+function checkWin(){
+    win = true;
+    for (let i = 0; i < back.length; i++){
+        if (back[i].style.display != "none"){
+            win = false;
+        }
+    }
+    if (win){
+        document.getElementById("congrat").classList.remove("d-none")
+        document.getElementById("result").innerText = "You finish the game in " + finishTime;
+    }
+    console.log(win)
+}
 // a function to shuffle the card randomly
 let cardContainers = document.querySelectorAll(".imageContainer")
 function shuffleCards(){
@@ -71,6 +87,8 @@ function resetGame(){
     firstFlip = null;
     secondFlip = null;
     flipped = false;
+    document.getElementById("congrat").classList.add("d-none");
+    document.getElementById("result").innerText = "";
     for (let i = 0; i < front.length; i++){
         front[i].style.display = ""}
     for (let i = 0; i < back.length; i++){
@@ -85,5 +103,7 @@ for (let i = 0; i < front.length; i++){
     front[i].addEventListener("click", flip)}
 
 // event listener: reset the game when user clicks START PLAY button.
-let button = document.getElementById("startBtn");
-button.addEventListener("click", resetGame)
+let startButton = document.getElementById("startBtn");
+startButton.addEventListener("click", resetGame);
+let againButton = document.getElementById("againBtn");
+againButton.addEventListener("click", resetGame);
