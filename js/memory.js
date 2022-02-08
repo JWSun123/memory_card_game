@@ -1,14 +1,27 @@
+//Declaration of variable for the timer and counter.
+let count = document.getElementById("count");
+let countNumber = 0;
+count.innerHTML = countNumber;
+let timerMinute = document.getElementById("minute");
+let timerSecond = document.getElementById("second");
+let totalSecond = 0;
+//let timerWin; // NOT USED YET.
+let easyClicked = 0; //TO BE CHANGED
+let timerStart;
+
 //3 levels of diffuculties
 
 $(document).ready(()=>{
     $('.easy').on('click',function(){
         resetGame();
         $('.hide').hide();
+        $('.hide').children().hide();
     })
     $('.medium').on('click',function(){
         resetGame();
         $('.hide').show();
         $('.hidden').hide();
+        $('.hidden').children().hide();
     })
     $('.hard').on('click',()=>{
         resetGame();
@@ -83,6 +96,9 @@ function shuffleCards(){
 
 // a function to reset the game
 function resetGame(){
+    ++countNumber;
+    count.innerText = countNumber;
+    timerStart = setInterval(startTimer, 1000);
     shuffleCards();
     firstFlip = null;
     secondFlip = null;
@@ -95,6 +111,39 @@ function resetGame(){
         back[i].style.display = ""}
 }
 
+// a function to start the timer
+function startTimer(){
+    if (easyClicked == 0){
+        ++totalSecond;
+        timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
+        timerSecond.innerText = timerLogic(totalSecond % 60);
+    } else {
+        console.log("easy has been clicked and timer should stop")
+        clearInterval(timerStart);
+        storeTimer(timerMinute.innerText, timerSecond.innerText);
+    }
+}
+
+//Stops timer when you click on <h2>Time</h2>. A function to stop the timer.
+function stopTimer(){
+    easyClicked = 1;
+}
+
+// A function to return the correct display of time.
+function timerLogic(totalSecond){
+            let timer = totalSecond + "";
+            if (timer.length < 2) {
+                return "0" + timer;
+            } else {
+                return timer;
+            }
+        }
+
+//A function to store the time for the win pop-up.
+function storeTimer(minute, second){
+    console.log(minute + " : " + second);
+}
+
 // event listener: shuffle cards everytime the page is reload.
  window.addEventListener("load", shuffleCards)
 
@@ -103,7 +152,7 @@ for (let i = 0; i < front.length; i++){
     front[i].addEventListener("click", flip)}
 
 // event listener: reset the game when user clicks START PLAY button.
-let startButton = document.getElementById("startBtn");
-startButton.addEventListener("click", resetGame);
-let againButton = document.getElementById("againBtn");
-againButton.addEventListener("click", resetGame);
+let button = document.getElementById("startBtn");
+button.addEventListener("click", resetGame)
+let easyBtn = document.querySelector("#time");
+easyBtn.addEventListener("click", stopTimer);
