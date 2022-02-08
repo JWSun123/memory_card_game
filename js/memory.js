@@ -4,27 +4,34 @@ let countNumber = 0;
 count.innerHTML = countNumber;
 let timerMinute = document.getElementById("minute");
 let timerSecond = document.getElementById("second");
-let totalSecond = 0;
+let totalSecond;
 //let timerWin; // NOT USED YET.
-let easyClicked = 0; //TO BE CHANGED
 let timerStart;
+let imgCount = 0;
 
 //3 levels of diffuculties
 
 $(document).ready(()=>{
     $('.easy').on('click',function(){
+        imgCount = 0;
         resetGame();
+        resetTimer();
         $('.hide').hide();
         $('.hide').children().hide();
+        
     })
     $('.medium').on('click',function(){
+        imgCount = 0;
         resetGame();
+        resetTimer();
         $('.hide').show();
         $('.hidden').hide();
         $('.hidden').children().hide();
     })
     $('.hard').on('click',()=>{
+        imgCount = 0;
         resetGame();
+        resetTimer();
         $('.hide').show();
     })
 })
@@ -39,6 +46,7 @@ let secondFlip;
 let flipped = false;
 let win;
 function flip(){
+    playGame();
     this.style.display = "none";
     if (!flipped){
         firstFlip = this.nextElementSibling;
@@ -81,8 +89,9 @@ function checkWin(){
         }
     }
     if (win){
+        stopTimer();
         document.getElementById("congrat").classList.remove("d-none")
-        document.getElementById("result").innerText = "You finish the game in " + finishTime;
+        document.getElementById("result").innerText = "You finish the game in " + finishTime; //TODO : MAKE IT SO IT'S THE STORED TIME
     }
     console.log(win)
 }
@@ -97,9 +106,6 @@ function shuffleCards(){
 
 // a function to reset the game
 function resetGame(){
-    ++countNumber;
-    count.innerText = countNumber;
-    timerStart = setInterval(startTimer, 1000);
     shuffleCards();
     firstFlip = null;
     secondFlip = null;
@@ -112,22 +118,43 @@ function resetGame(){
         back[i].style.display = ""}
 }
 
+//function to start the game.
+function playGame(){
+    imgCount++;
+    if (imgCount == 1) {
+        ++countNumber;
+        count.innerText = countNumber;
+        totalSecond = 0;
+        timerStart = setInterval(startTimer, 1000);
+        resetGame();
+    }
+}
+
 // a function to start the timer
-function startTimer(){
-    if (easyClicked == 0){
+function startTimer(){    
+    if (!win){ 
         ++totalSecond;
         timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
         timerSecond.innerText = timerLogic(totalSecond % 60);
     } else {
-        console.log("easy has been clicked and timer should stop")
-        clearInterval(timerStart);
-        storeTimer(timerMinute.innerText, timerSecond.innerText);
+        console.log("win has been clicked and timer should stop")
+        stopTimer();
+        
     }
 }
 
 //Stops timer when you click on <h2>Time</h2>. A function to stop the timer.
 function stopTimer(){
-    easyClicked = 1;
+    clearInterval(timerStart);
+    finishTime = storeTimer(timerMinute.innerText, timerSecond.innerText);
+}
+
+//function to reset the timer.
+function resetTimer(){
+    clearInterval(timerStart);
+    totalSecond = 0;
+    timerMinute.innerText = "00";
+    timerSecond.innerText = "00";
 }
 
 // A function to return the correct display of time.
@@ -142,7 +169,7 @@ function timerLogic(totalSecond){
 
 //A function to store the time for the win pop-up.
 function storeTimer(minute, second){
-    console.log(minute + " : " + second);
+    return minute + " : " + second;
 }
 
 // event listener: shuffle cards everytime the page is reload.
@@ -154,9 +181,10 @@ for (let i = 0; i < front.length; i++){
 
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
-startButton.addEventListener("click", resetGame);
+startButton.addEventListener("click", playGame);
 let againButton = document.getElementById("againBtn");
-againButton.addEventListener("click", resetGame);
+againButton.addEventListener("click", playGame);
 
-let easyBtn = document.querySelector("#time");
-easyBtn.addEventListener("click", stopTimer);
+
+let winBtn = document.querySelector("#winBtn");
+winBtn.addEventListener("click", stopTimer);
