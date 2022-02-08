@@ -56,6 +56,7 @@ function flip(){
 function disappear(){
     firstFlip.style.display = "none";
     secondFlip.style.display = "none";
+    checkWin();
 }
 // if two cards flipped are not match, both cards unflip.
 function unflip(){
