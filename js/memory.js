@@ -70,6 +70,7 @@ function checkWin(){
     if (win){
         document.getElementById("congrat").classList.remove("d-none")
         document.getElementById("result").innerText = "You finish the game in " + finishTime;
+        document.getElementById("startBtn").innerText = "PLAY AGAIN";
     }
     console.log(win)
 }
@@ -90,6 +91,7 @@ function resetGame(){
     flipped = false;
     document.getElementById("congrat").classList.add("d-none");
     document.getElementById("result").innerText = "";
+    document.getElementById("startBtn").innerText = "START PLAY";
     for (let i = 0; i < front.length; i++){
         front[i].style.display = ""}
     for (let i = 0; i < back.length; i++){
@@ -106,6 +108,5 @@ for (let i = 0; i < front.length; i++){
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
 startButton.addEventListener("click", resetGame);
-let againButton = document.getElementById("againBtn");
-againButton.addEventListener("click", resetGame);
+
 
