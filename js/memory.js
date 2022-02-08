@@ -42,6 +42,7 @@ function flip(){
 function disappear(){
     firstFlip.style.display = "none";
     secondFlip.style.display = "none";
+    checkWin();
 }
 // if two cards flipped are not match, both cards unflip.
 function unflip(){
@@ -52,7 +53,6 @@ function unflip(){
 function isMatch(firstFlip, secondFlip){
     if (firstFlip.getAttribute("value") === secondFlip.getAttribute("value")){
         let timerDisappear = setTimeout(disappear, 300);
-        checkWin();
     }
     else{
         let timerUnflip = setTimeout(unflip, 300)
