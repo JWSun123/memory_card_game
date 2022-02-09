@@ -148,9 +148,9 @@ function resetGame(){
 
 //function to start the game.
 function playGame(){ 
-    if (document.getElementById("startBtn").innerText === "PLAY AGAIN") {
-        resetGame();
-    }
+    // if (document.getElementById("startBtn").innerText === "PLAY AGAIN") {
+    //     resetGame();
+    // }
     imgCount++;
     if (imgCount == 1) {
         if (count.id == "count"){
@@ -239,6 +239,8 @@ for (let i = 0; i < front.length; i++){
 
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
+startButton.addEventListener("click", resetGame);
 startButton.addEventListener("click", playGame);
+
 
 
