@@ -15,15 +15,16 @@ let lvlText = document.getElementById("level");
 let storeTimeEasy = document.getElementById("bestEasy");
 let storeTimeMedium = document.getElementById("bestMedium");
 let storeTimeHard = document.getElementById("bestHard");
+// time used to finish the game. Will be displayed in the congrats box.
+let finishTime;
 
 //Declaration of variables for the best time.
 let previousEasyTime;
 let previousMediumTime;
 let previousHardTime;
 
+//3 levels of diffuculties. When easy is clicked, cards for medium and hard level will be hidden.
 changeLevelName(level);
-//3 levels of diffuculties
-
 $(document).ready(()=>{
     $('.easy').on('click',function(){
         level = "easy";
@@ -54,26 +55,27 @@ $(document).ready(()=>{
         $('.hide').show();
     })
 })
-// time used to finish the game. 
-let finishTime;
-
+// setting variable. front: unflipped card side. back: flipped card side (with different images).
 let front = document.querySelectorAll(".front");
 let back = document.querySelectorAll(".back");
+// need to determine the first and second flip.
 let firstFlip;
 let secondFlip;
 // variable flipped: if there is already a card flipped: true, else: false.
 let flipped = false;
 let win;
-
+// when the player clicks a card, flip() will be called.
 function flip(){
     startGame();
     this.style.display = "none";
     if (!flipped){
+        //the user will click on the "front", setting firstFlip to be the younger sibling of "front", which is "back".
         firstFlip = this.nextElementSibling;
         flipped = true;
     }
     else{
         flipped = false;
+        // if there is already a card flipped on the board, the secondFlip will be the younger sibling of the "front" of the second flipped card.
         secondFlip = this.nextElementSibling;
         isMatch(firstFlip, secondFlip);
     }
@@ -85,6 +87,7 @@ function disappear(){
     secondFlip.style.display = "none";
     if(checkWin()){
         stopTimer();
+        // if the player wins, the congrat box will be displayed.
         document.getElementById("congrat").classList.remove("d-none")
         document.getElementById("result").innerText = "You finished the game in " + finishTime + " and you have played " + addCountNumber() + " " + isPlural() + ".";
         document.getElementById("startBtn").innerText = "PLAY AGAIN";
@@ -95,12 +98,14 @@ function unflip(){
     firstFlip.previousElementSibling.style.display = "";
     secondFlip.previousElementSibling.style.display = "";
 }
-// if the value of two cards are the same, it's match.
+// if the data-value of two cards are the same, it's match.
 function isMatch(firstFlip, secondFlip){
     if (firstFlip.getAttribute("data-value") === secondFlip.getAttribute("data-value")){
+        // two matched cards will disappear after 300 milliseconds.
         let timerDisappear = setTimeout(disappear, 300)
     }
     else{
+        // two unmatched cards will unflip after 300 millisecons.
         let timerUnflip = setTimeout(unflip, 300)
     }
 }
@@ -134,11 +139,9 @@ function resetGame(){
     document.getElementById("congrat").classList.add("d-none");
     document.getElementById("result").innerText = "";
     document.getElementById("startBtn").innerText = "START PLAY";
-    
-    for (let i = 0; i < front.length; i++){
-        front[i].style.display = ""}
-    for (let i = 0; i < back.length; i++){
-        back[i].style.display = ""}
+    // all cards will display, then some cards will be hidden according to the difficulty level.
+    $(front).show();
+    $(back).show();
 
     if (level == "easy"){
         $('.hide').hide();
@@ -253,6 +256,11 @@ function bestTime(){
         }
     }
 }
+// a function to resume the timer.
+function resumeTimer(){
+    let timeStop = storeTimer(timerMinute.innerText, timerSecond.innerText);
+    startTimer(parseInt(timeStop[0],10),parseInt(timeStop[1],10));
+}
 
 // event listener: shuffle cards everytime the page is reload.
  window.addEventListener("load", shuffleCards)
@@ -264,21 +272,18 @@ $(front).click(flip);
 let startButton = document.getElementById("startBtn");
 startButton.addEventListener("click", resetGame);
 startButton.addEventListener("click", startGame);
+//event listener: when clicking the title, the page will return to index.html
 let pageTitle = document.getElementsByTagName("h1")[0];
 pageTitle.addEventListener("click", function(){
     document.location.href="index.html";
 });
 
-//pause the game
+//pause the game and timer.
 $('#stopBtn').on('click',()=>{
     clearInterval(timerStart);
 })
-//resume the game
+//resume the game and timer.
 $('#resumeBtn').on('click',()=>{
     resumeTimer();
 })
 
-function resumeTimer(){
-    let timeStop = storeTimer(timerMinute.innerText, timerSecond.innerText);
-    startTimer(parseInt(timeStop[0],10),parseInt(timeStop[1],10));
-}
