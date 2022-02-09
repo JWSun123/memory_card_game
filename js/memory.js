@@ -167,10 +167,9 @@ function startGame(){
     }
 }
 
-// a function to start the timer
+// a function to start the timer, stop button shows
 function startTimer(){    
     timerStart = setInterval(timer, 1000);
-    
 }
 
 function timer(){    
@@ -189,7 +188,7 @@ function resetTimer(){
     clearInterval(timerStart);
     totalSecond = 0;
     timerMinute.innerText = "00";
-    timerSecond.innerText = "00";
+    timerSecond.innerText = "00";  
 }
 
 // A function to return the correct display of time.
@@ -241,3 +240,15 @@ let pageTitle = document.getElementsByTagName("h1")[0];
 pageTitle.addEventListener("click", function(){
     document.location.href="index.html";
 });
+
+$('#stopBtn').on('click',()=>{
+    clearInterval(timerStart);
+})
+$('#resumeBtn').on('click',()=>{
+    resumeTimer();
+})
+
+function resumeTimer(){
+    let timeStop = storeTimer(timerMinute.innerText, timerSecond.innerText);
+    startTimer(parseInt(timeStop[0],10),parseInt(timeStop[1],10));
+}
