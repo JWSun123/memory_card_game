@@ -88,7 +88,7 @@ function unflip(){
 }
 // if the value of two cards are the same, it's match.
 function isMatch(firstFlip, secondFlip){
-    if (firstFlip.getAttribute("value") === secondFlip.getAttribute("value")){
+    if (firstFlip.getAttribute("data-value") === secondFlip.getAttribute("data-value")){
         let timerDisappear = setTimeout(disappear, 300)
     }
     else{
@@ -236,7 +236,15 @@ $(front).click(flip);
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
 startButton.addEventListener("click", resetGame);
+<<<<<<< HEAD
 startButton.addEventListener("click", startGame);
 
 
 
+=======
+startButton.addEventListener("click", playGame);
+let pageTitle = document.getElementsByTagName("h1")[0];
+pageTitle.addEventListener("click", function(){
+    document.location.href="index.html";
+});
+>>>>>>> 707eb8e12fc9c30c604bb1262083a1b98bacb1fc
