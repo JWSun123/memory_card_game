@@ -241,9 +241,11 @@ pageTitle.addEventListener("click", function(){
     document.location.href="index.html";
 });
 
+//pause the game
 $('#stopBtn').on('click',()=>{
     clearInterval(timerStart);
 })
+//resume the game
 $('#resumeBtn').on('click',()=>{
     resumeTimer();
 })
