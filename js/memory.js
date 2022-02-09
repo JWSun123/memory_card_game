@@ -12,6 +12,15 @@ let timerStart;
 let imgCount = 0;
 let level = "hard"; //I set it to hard because when the page load, we see 16 cards
 let lvlText = document.getElementById("level");
+let storeTimeEasy = document.getElementById("bestEasy");
+let storeTimeMedium = document.getElementById("bestMedium");
+let storeTimeHard = document.getElementById("bestHard");
+
+//Declaration of variables for the best time.
+let previousEasyTime;
+let previousMediumTime;
+let previousHardTime;
+
 changeLevelName(level);
 //3 levels of diffuculties
 
@@ -152,16 +161,11 @@ function startGame(){
     if (imgCount == 1) {
         if (count.id == "count"){
             count.innerHTML = ++countNumber;
-            //++countNumber;
         } else if (count.id == "countMedium"){
             count.innerHTML = ++countNumberMedium;
-            //++countNumberMedium;
         } else if (count.id == "countHard"){
             count.innerHTML = ++countNumberHard;
-            //++countNumberHard;
         }
-        
-        //count.innerText = countNumber;
         totalSecond = 0;
         startTimer();
     }
@@ -181,6 +185,7 @@ function timer(){
 function stopTimer(){
     clearInterval(timerStart);
     finishTime = storeTimer(timerMinute.innerText, timerSecond.innerText);
+    bestTime();
 }
 
 //function to reset the timer.
@@ -224,6 +229,29 @@ function isPlural(){
 //A function to obtain the total count.
 function addCountNumber(){
     return totalCountNumber = countNumber + countNumberMedium + countNumberHard;
+}
+
+//A function to store the fastest time to finish the game.
+function bestTime(){
+    if (count.id == "count"){
+        
+        if(!previousEasyTime || previousEasyTime > finishTime){
+            storeTimeEasy.innerHTML = finishTime;
+            previousEasyTime = finishTime;
+        }
+    } else if (count.id == "countMedium"){
+        
+        if(!previousMediumTime || previousMediumTime > finishTime){
+            storeTimeMedium.innerHTML = finishTime;
+            previousMediumTime = finishTime;
+        }
+    } else if (count.id == "countHard"){
+        
+        if(!previousHardTime || previousHardTime > finishTime){
+            storeTimeHard.innerHTML = finishTime;
+            previousHardTime = finishTime;
+        }
+    }
 }
 
 // event listener: shuffle cards everytime the page is reload.
