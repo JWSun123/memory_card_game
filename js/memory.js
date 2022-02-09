@@ -57,7 +57,7 @@ let flipped = false;
 let win;
 
 function flip(){
-    playGame();
+    startGame();
     this.style.display = "none";
     if (!flipped){
         firstFlip = this.nextElementSibling;
@@ -70,7 +70,7 @@ function flip(){
     }
     
 }
-// if two cards flipped are match, both cards disappear.
+// if two cards flipped are match, both cards disappear. And if the player wins, the congrats message with show up, with the time and counts.
 function disappear(){
     firstFlip.style.display = "none";
     secondFlip.style.display = "none";
@@ -95,7 +95,7 @@ function isMatch(firstFlip, secondFlip){
         let timerUnflip = setTimeout(unflip, 300)
     }
 }
-
+// to check if the player wins by check if the display of all cards are none.
 function checkWin(){
     win = true;
     for (let i = 0; i < back.length; i++){
@@ -147,10 +147,7 @@ function resetGame(){
 }
 
 //function to start the game.
-function playGame(){ 
-    // if (document.getElementById("startBtn").innerText === "PLAY AGAIN") {
-    //     resetGame();
-    // }
+function startGame(){ 
     imgCount++;
     if (imgCount == 1) {
         if (count.id == "count"){
@@ -234,13 +231,12 @@ function addCountNumber(){
  window.addEventListener("load", shuffleCards)
 
 // event listener: click a card, flip it.
-for (let i = 0; i < front.length; i++){
-    front[i].addEventListener("click", flip)}
+$(front).click(flip);
 
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
 startButton.addEventListener("click", resetGame);
-startButton.addEventListener("click", playGame);
+startButton.addEventListener("click", startGame);
 
 
 
