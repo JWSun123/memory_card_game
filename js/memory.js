@@ -67,7 +67,8 @@ let win;
 // when the player clicks a card, flip() will be called.
 function flip(){
     startGame();
-    this.style.display = "none";
+    // hide the front image
+    $(this).hide();
     if (!flipped){
         //the user will click on the "front", setting firstFlip to be the younger sibling of "front", which is "back".
         firstFlip = this.nextElementSibling;
@@ -83,8 +84,8 @@ function flip(){
 }
 // if two cards flipped are match, both cards disappear. And if the player wins, the congrats message with show up, with the time and counts.
 function disappear(){
-    firstFlip.style.display = "none";
-    secondFlip.style.display = "none";
+    $(firstFlip).hide();
+    $(secondFlip).hide();
     if(checkWin()){
         stopTimer();
         // if the player wins, the congrat box will be displayed.
