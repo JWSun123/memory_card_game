@@ -11,16 +11,50 @@ let timerStart;
 
 //3 levels of diffuculties
 
+// Declaration of variable for the pause and resume button
+let hasStarted = false;
+let isPaused = false;
+let hasResumed = false;
+
+//3 levels of diffuculties. When easy is clicked, cards for medium and hard level will be hidden.
+changeLevelName(level);
 $(document).ready(()=>{
     $('.easy').on('click',function(){
+        hasStarted = false;
+        level = "easy";
+        changeLevelName(level);
+        count = document.getElementById("count");
+        resetGame();
+        resetTimer();
         $('.hide').hide();
+        $('.hide').children().hide();
+        //$(front).on("click",flip);
+        
+        
     })
     $('.medium').on('click',function(){
+        hasStarted = false;
+        level = "medium";
+        changeLevelName(level);
+        count = document.getElementById("countMedium");
+        resetGame();
+        resetTimer();
         $('.hide').show();
         $('.hidden').hide();
+        $('.hidden').children().hide();
+        //$(front).on("click",flip);
+        
     })
     $('.hard').on('click',()=>{
+        hasStarted = false;
+        level = "hard";
+        changeLevelName(level);
+        count = document.getElementById("countHard");
+        resetGame();
+        resetTimer();
         $('.hide').show();
+        //$(front).on("click",flip);
+        
     })
 })
 
@@ -88,16 +122,20 @@ function resetGame(){
         back[i].style.display = ""}
 }
 
-// a function to start the timer
-function startTimer(){
-    if (easyClicked == 0){
-        ++totalSecond;
-        timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
-        timerSecond.innerText = timerLogic(totalSecond % 60);
-    } else {
-        console.log("easy has been clicked and timer should stop")
-        clearInterval(timerStart);
-        storeTimer(timerMinute.innerText, timerSecond.innerText);
+//function to start the game.
+function startGame(){ 
+    hasStarted = true;
+    imgCount++;
+    if (imgCount == 1) {
+        if (count.id == "count"){
+            count.innerHTML = ++countNumber;
+        } else if (count.id == "countMedium"){
+            count.innerHTML = ++countNumberMedium;
+        } else if (count.id == "countHard"){
+            count.innerHTML = ++countNumberHard;
+        }
+        totalSecond = 0;
+        startTimer();
     }
 }
 
@@ -118,18 +156,99 @@ function timerLogic(totalSecond){
 
 //A function to store the time for the win pop-up.
 function storeTimer(minute, second){
-    console.log(minute + " : " + second);
+    return minute + ":" + second;
+}
+
+//A function to change the name of the level and capitalize its first letter.
+function changeLevelName(level){
+    level = level.charAt(0).toUpperCase() + level.slice(1);
+    lvlText.innerText = level;
+}
+
+//A function to change the a word to plural.
+function isPlural(){
+    if(countNumber > 1) {
+        return "times";
+    } else {
+        return "time";
+    }
+}
+
+//A function to obtain the total count.
+function addCountNumber(){
+    return totalCountNumber = countNumber + countNumberMedium + countNumberHard;
+}
+
+//A function to store the fastest time to finish the game.
+function bestTime(){
+    if (count.id == "count"){
+        
+        if(!previousEasyTime || previousEasyTime > finishTime){
+            storeTimeEasy.innerHTML = finishTime;
+            previousEasyTime = finishTime;
+        }
+    } else if (count.id == "countMedium"){
+        
+        if(!previousMediumTime || previousMediumTime > finishTime){
+            storeTimeMedium.innerHTML = finishTime;
+            previousMediumTime = finishTime;
+        }
+    } else if (count.id == "countHard"){
+        
+        if(!previousHardTime || previousHardTime > finishTime){
+            storeTimeHard.innerHTML = finishTime;
+            previousHardTime = finishTime;
+        }
+    }
+}
+// a function to resume the timer.
+function resumeTimer(){
+    hasResumed = true;
+    let timeStop = storeTimer(timerMinute.innerText, timerSecond.innerText);
+    startTimer(parseInt(timeStop[0],10),parseInt(timeStop[1],10));
 }
 
 // event listener: shuffle cards everytime the page is reload.
  window.addEventListener("load", shuffleCards)
 
 // event listener: click a card, flip it.
-for (let i = 0; i < front.length; i++){
-    front[i].addEventListener("click", flip)}
+//$(front).click(flip);
+
+$(front).on("click",flip);
 
 // event listener: reset the game when user clicks START PLAY button.
-let button = document.getElementById("startBtn");
-button.addEventListener("click", resetGame)
-let easyBtn = document.querySelector("#time");
-easyBtn.addEventListener("click", stopTimer);
+let startButton = document.getElementById("startBtn");
+//startButton.addEventListener("click", resetGame);
+//startButton.addEventListener("click", startGame);
+$(startButton).on("click", ()=>{
+    //$(front).on("click",flip);
+    resetGame();
+    startGame();
+})
+//event listener: when clicking the title, the page will return to index.html
+let pageTitle = document.getElementsByTagName("h1")[0];
+pageTitle.addEventListener("click", function(){
+    document.location.href="index.html";
+});
+
+//pause the game and timer on the condition that the game has started.
+    $('#stopBtn').on('click',()=>{
+        if (hasStarted){
+            isPaused = true;
+            hasResumed = false;
+            clearInterval(timerStart);
+        
+            $(front).off("click",flip);
+        }
+    })
+
+//resume the game and timer on the condition that the game is paused.
+    $('#resumeBtn').on('click',()=>{
+        if (isPaused){
+            isPaused = false;
+            if (!hasResumed) {
+                resumeTimer();
+            }        
+            $(front).on("click",flip);
+        }
+    })
