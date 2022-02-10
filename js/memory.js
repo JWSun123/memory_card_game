@@ -23,10 +23,16 @@ let previousEasyTime;
 let previousMediumTime;
 let previousHardTime;
 
+// Declaration of variable for the pause and resume button
+let hasStarted = false;
+let isPaused = false;
+let hasResumed = false;
+
 //3 levels of diffuculties. When easy is clicked, cards for medium and hard level will be hidden.
 changeLevelName(level);
 $(document).ready(()=>{
     $('.easy').on('click',function(){
+        hasStarted = false;
         level = "easy";
         changeLevelName(level);
         count = document.getElementById("count");
@@ -37,6 +43,7 @@ $(document).ready(()=>{
         
     })
     $('.medium').on('click',function(){
+        hasStarted = false;
         level = "medium";
         changeLevelName(level);
         count = document.getElementById("countMedium");
@@ -47,6 +54,7 @@ $(document).ready(()=>{
         $('.hidden').children().hide();
     })
     $('.hard').on('click',()=>{
+        hasStarted = false;
         level = "hard";
         changeLevelName(level);
         count = document.getElementById("countHard");
@@ -139,7 +147,7 @@ function resetGame(){
     resetTimer();
     document.getElementById("congrat").classList.add("d-none");
     document.getElementById("result").innerText = "";
-    document.getElementById("startBtn").innerText = "START PLAY";
+    document.getElementById("startBtn").innerText = "START";
     // all cards will display, then some cards will be hidden according to the difficulty level.
     $(front).show();
     $(back).show();
@@ -161,6 +169,7 @@ function resetGame(){
 
 //function to start the game.
 function startGame(){ 
+    hasStarted = true;
     imgCount++;
     if (imgCount == 1) {
         if (count.id == "count"){
@@ -259,6 +268,7 @@ function bestTime(){
 }
 // a function to resume the timer.
 function resumeTimer(){
+    hasResumed = true;
     let timeStop = storeTimer(timerMinute.innerText, timerSecond.innerText);
     startTimer(parseInt(timeStop[0],10),parseInt(timeStop[1],10));
 }
@@ -269,22 +279,38 @@ function resumeTimer(){
 // event listener: click a card, flip it.
 $(front).click(flip);
 
-// event listener: reset the game when user clicks START PLAY button.
+// event listener: reset the game when user clicks START button.
 let startButton = document.getElementById("startBtn");
-startButton.addEventListener("click", resetGame);
-startButton.addEventListener("click", startGame);
+//startButton.addEventListener("click", resetGame);
+//startButton.addEventListener("click", startGame);
+$(startButton).on("click", ()=>{
+    //$(front).on("click",flip);
+    resetGame();
+    startGame();
+})
 //event listener: when clicking the title, the page will return to index.html
 let pageTitle = document.getElementsByTagName("h1")[0];
 pageTitle.addEventListener("click", function(){
     document.location.href="index.html";
 });
 
-//pause the game and timer.
+//pause the game and timer on the condition that the game has started.
 $('#stopBtn').on('click',()=>{
-    clearInterval(timerStart);
+    if (hasStarted){
+        isPaused = true;
+        hasResumed = false;
+        clearInterval(timerStart);
+    
+        $(front).off("click",flip);
+    }
 })
-//resume the game and timer.
+//resume the game and timer on the condition that the game is paused.
 $('#resumeBtn').on('click',()=>{
-    resumeTimer();
+    if (isPaused){
+        isPaused = false;
+        if (!hasResumed) {
+            resumeTimer();
+        }        
+        $(front).on("click",flip);
+    }
 })
-
