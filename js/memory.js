@@ -147,7 +147,7 @@ function resetGame(){
     resetTimer();
     document.getElementById("congrat").classList.add("d-none");
     document.getElementById("result").innerText = "";
-    document.getElementById("startBtn").innerText = "START PLAY";
+    document.getElementById("startBtn").innerText = "START";
     // all cards will display, then some cards will be hidden according to the difficulty level.
     $(front).show();
     $(back).show();
@@ -279,7 +279,7 @@ function resumeTimer(){
 // event listener: click a card, flip it.
 $(front).click(flip);
 
-// event listener: reset the game when user clicks START PLAY button.
+// event listener: reset the game when user clicks START button.
 let startButton = document.getElementById("startBtn");
 //startButton.addEventListener("click", resetGame);
 //startButton.addEventListener("click", startGame);
