@@ -1,15 +1,27 @@
 //Declaration of variable for the timer and counter.
-let count = document.getElementById("count");
+let count = document.getElementById("countHard");
 let countNumber = 0;
-count.innerHTML = countNumber;
+let countNumberMedium = 0;
+let countNumberHard = 0;
+let totalCountNumber;
+count.innerHTML = countNumberHard;
 let timerMinute = document.getElementById("minute");
 let timerSecond = document.getElementById("second");
-let totalSecond = 0;
-//let timerWin; // NOT USED YET.
-let easyClicked = 0; //TO BE CHANGED
+let totalSecond;
 let timerStart;
+let imgCount = 0;
+let level = "hard"; //I set it to hard because when the page load, we see 16 cards
+let lvlText = document.getElementById("level");
+let storeTimeEasy = document.getElementById("bestEasy");
+let storeTimeMedium = document.getElementById("bestMedium");
+let storeTimeHard = document.getElementById("bestHard");
+// time used to finish the game. Will be displayed in the congrats box.
+let finishTime;
 
-//3 levels of diffuculties
+//Declaration of variables for the best time.
+let previousEasyTime;
+let previousMediumTime;
+let previousHardTime;
 
 // Declaration of variable for the pause and resume button
 let hasStarted = false;
@@ -28,8 +40,6 @@ $(document).ready(()=>{
         resetTimer();
         $('.hide').hide();
         $('.hide').children().hide();
-        //$(front).on("click",flip);
-        
         
     })
     $('.medium').on('click',function(){
@@ -42,8 +52,6 @@ $(document).ready(()=>{
         $('.hide').show();
         $('.hidden').hide();
         $('.hidden').children().hide();
-        //$(front).on("click",flip);
-        
     })
     $('.hard').on('click',()=>{
         hasStarted = false;
@@ -53,51 +61,73 @@ $(document).ready(()=>{
         resetGame();
         resetTimer();
         $('.hide').show();
-        //$(front).on("click",flip);
-        
     })
 })
-
-
+// setting variable. front: unflipped card side. back: flipped card side (with different images).
 let front = document.querySelectorAll(".front");
 let back = document.querySelectorAll(".back");
+// need to determine the first and second flip.
 let firstFlip;
 let secondFlip;
 // variable flipped: if there is already a card flipped: true, else: false.
 let flipped = false;
-
+let win;
+// when the player clicks a card, flip() will be called.
 function flip(){
-    this.style.display = "none";
+    startGame();
+    // hide the front image
+    $(this).hide();
     if (!flipped){
+        //the user will click on the "front", setting firstFlip to be the younger sibling of "front", which is "back".
         firstFlip = this.nextElementSibling;
         flipped = true;
     }
     else{
         flipped = false;
+        // if there is already a card flipped on the board, the secondFlip will be the younger sibling of the "front" of the second flipped card.
         secondFlip = this.nextElementSibling;
         isMatch(firstFlip, secondFlip);
     }
+    
 }
-// if two cards flipped are match, both cards disappear.
+// if two cards flipped are match, both cards disappear. And if the player wins, the congrats message with show up, with the time and counts.
 function disappear(){
-    firstFlip.style.display = "none";
-    secondFlip.style.display = "none";
+    $(firstFlip).hide();
+    $(secondFlip).hide();
+    if(checkWin()){
+        stopTimer();
+        // if the player wins, the congrat box will be displayed.
+        document.getElementById("congrat").classList.remove("d-none")
+        document.getElementById("result").innerText = "You finished the game in " + finishTime + " and you have played " + addCountNumber() + " " + isPlural() + ".";
+        document.getElementById("startBtn").innerText = "PLAY AGAIN";
+    };
 }
 // if two cards flipped are not match, both cards unflip.
 function unflip(){
     firstFlip.previousElementSibling.style.display = "";
     secondFlip.previousElementSibling.style.display = "";
 }
-// if the value of two cards are the same, it's match.
+// if the data-value of two cards are the same, it's match.
 function isMatch(firstFlip, secondFlip){
-    if (firstFlip.getAttribute("value") === secondFlip.getAttribute("value")){
+    if (firstFlip.getAttribute("data-value") === secondFlip.getAttribute("data-value")){
+        // two matched cards will disappear after 300 milliseconds.
         let timerDisappear = setTimeout(disappear, 300)
     }
     else{
+        // two unmatched cards will unflip after 300 millisecons.
         let timerUnflip = setTimeout(unflip, 300)
     }
 }
-
+// to check if the player wins by check if the display of all cards are none.
+function checkWin(){
+    win = true;
+    for (let i = 0; i < back.length; i++){
+        if (back[i].style.display != "none"){
+            win = false;
+        }
+    }
+    return win;
+}
 // a function to shuffle the card randomly
 let cardContainers = document.querySelectorAll(".imageContainer")
 function shuffleCards(){
@@ -109,17 +139,32 @@ function shuffleCards(){
 
 // a function to reset the game
 function resetGame(){
-    ++countNumber;
-    count.innerText = countNumber;
-    timerStart = setInterval(startTimer, 1000);
     shuffleCards();
     firstFlip = null;
     secondFlip = null;
     flipped = false;
-    for (let i = 0; i < front.length; i++){
-        front[i].style.display = ""}
-    for (let i = 0; i < back.length; i++){
-        back[i].style.display = ""}
+    imgCount = 0; 
+    resetTimer();
+    document.getElementById("congrat").classList.add("d-none");
+    document.getElementById("result").innerText = "";
+    document.getElementById("startBtn").innerText = "START PLAY";
+    // all cards will display, then some cards will be hidden according to the difficulty level.
+    $(front).show();
+    $(back).show();
+
+    if (level == "easy"){
+        $('.hide').hide();
+        $('.hide').children().hide();
+    }
+    else if (level == "medium"){
+        $('.hide').show();
+        $('.hidden').hide();
+        $('.hidden').children().hide();
+    }
+    else{
+        $('.hide').show();
+    }
+    
 }
 
 //function to start the game.
@@ -139,9 +184,29 @@ function startGame(){
     }
 }
 
+// a function to start the timer, stop button shows
+function startTimer(){    
+    timerStart = setInterval(timer, 1000);
+}
+
+function timer(){    
+    ++totalSecond;
+    timerMinute.innerText = timerLogic(Math.floor(totalSecond / 60));
+    timerSecond.innerText = timerLogic(totalSecond % 60);  
+}
 //Stops timer when you click on <h2>Time</h2>. A function to stop the timer.
 function stopTimer(){
-    easyClicked = 1;
+    clearInterval(timerStart);
+    finishTime = storeTimer(timerMinute.innerText, timerSecond.innerText);
+    bestTime();
+}
+
+//function to reset the timer.
+function resetTimer(){
+    clearInterval(timerStart);
+    totalSecond = 0;
+    timerMinute.innerText = "00";
+    timerSecond.innerText = "00";  
 }
 
 // A function to return the correct display of time.
@@ -212,9 +277,7 @@ function resumeTimer(){
  window.addEventListener("load", shuffleCards)
 
 // event listener: click a card, flip it.
-//$(front).click(flip);
-
-$(front).on("click",flip);
+$(front).click(flip);
 
 // event listener: reset the game when user clicks START PLAY button.
 let startButton = document.getElementById("startBtn");
@@ -232,23 +295,22 @@ pageTitle.addEventListener("click", function(){
 });
 
 //pause the game and timer on the condition that the game has started.
-    $('#stopBtn').on('click',()=>{
-        if (hasStarted){
-            isPaused = true;
-            hasResumed = false;
-            clearInterval(timerStart);
-        
-            $(front).off("click",flip);
-        }
-    })
-
+$('#stopBtn').on('click',()=>{
+    if (hasStarted){
+        isPaused = true;
+        hasResumed = false;
+        clearInterval(timerStart);
+    
+        $(front).off("click",flip);
+    }
+})
 //resume the game and timer on the condition that the game is paused.
-    $('#resumeBtn').on('click',()=>{
-        if (isPaused){
-            isPaused = false;
-            if (!hasResumed) {
-                resumeTimer();
-            }        
-            $(front).on("click",flip);
-        }
-    })
+$('#resumeBtn').on('click',()=>{
+    if (isPaused){
+        isPaused = false;
+        if (!hasResumed) {
+            resumeTimer();
+        }        
+        $(front).on("click",flip);
+    }
+})
