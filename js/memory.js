@@ -47,7 +47,6 @@ $(document).ready(()=>{
         resetTimer();
         $('.hide').hide();
         $('.hide').children().hide();
-        
     })
     $('.medium').on('click',function(){
         hasStarted = false;
@@ -99,7 +98,6 @@ function flip(){
         secondFlip = this.nextElementSibling;
         isMatch(firstFlip, secondFlip);
     }
-    
 }
 
 //If two cards flipped are match, both cards disappear. And if the player wins, the congrats message with show up, with the time and counts.
@@ -167,7 +165,6 @@ function resetGame(){
     //All cards will display, then some cards will be hidden according to the difficulty level.
     $(front).show();
     $(back).show();
-
     if (level == "easy"){
         $('.hide').hide();
         $('.hide').children().hide();
@@ -179,8 +176,7 @@ function resetGame(){
     }
     else{
         $('.hide').show();
-    }
-    
+    } 
 }
 
 //A function to start the game.
@@ -292,7 +288,7 @@ function resumeTimer(){
 }
 
 //Event listener: shuffle cards everytime the page is reload.
- window.addEventListener("load", shuffleCards)
+ window.addEventListener("load", shuffleCards);
 
 //Event listener: click a card, flip it.
 $(front).click(flip);
