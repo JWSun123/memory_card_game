@@ -153,7 +153,16 @@ function shuffleCards(){
 
 //A function to reset the game.
 function resetGame(){
+    hasStarted = false;
+    //When the game resets and it was previously paused, isPaused becomes false and the cards are clickable again.
+    if (isPaused) {
+        isPaused = false;
+        $(front).on("click",flip);
+    }
+    
+    //Restore the background color of the PAUSE button.
     $('#stopBtn').removeClass("bgRed").addClass("bgYellow");
+    
     shuffleCards();
     firstFlip = null;
     secondFlip = null;
@@ -292,7 +301,7 @@ function resumeTimer(){
  window.addEventListener("load", shuffleCards);
 
 //Event listener: click a card, flip it.
-$(front).click(flip);
+$(front).on("click",flip);
 
 //Event listener: resets the game and starts it when the user clicks on START button.
 let startButton = document.getElementById("startBtn");
@@ -315,13 +324,12 @@ $('#stopBtn').on('click',()=>{
         clearInterval(timerStart);
         $(front).off("click",flip);
         $('#stopBtn').removeClass("bgYellow").addClass("bgRed");
-        console.log("should remove yellow");
     }
 })
 
-//Event listener: resume the game and timer when the user clicks on RESUME button, on the condition that the game is paused.
+//Event listener: resume the game and timer when the user clicks on RESUME button, on the condition that the game has started and is paused.
 $('#resumeBtn').on('click',()=>{
-    if (isPaused){
+    if (isPaused && hasStarted){
         isPaused = false;
         if (!hasResumed) {
             resumeTimer();
