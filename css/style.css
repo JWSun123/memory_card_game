@@ -56,3 +56,7 @@ h2{
 img:hover{
     transform: scale(0.95);
 }
+
+.bgRed{
+    background-color: #ff0000;
+}

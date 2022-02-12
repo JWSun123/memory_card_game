@@ -153,6 +153,7 @@ function shuffleCards(){
 
 //A function to reset the game.
 function resetGame(){
+    $('#stopBtn').removeClass("bgRed").addClass("bgYellow");
     shuffleCards();
     firstFlip = null;
     secondFlip = null;
@@ -313,6 +314,8 @@ $('#stopBtn').on('click',()=>{
         hasResumed = false;
         clearInterval(timerStart);
         $(front).off("click",flip);
+        $('#stopBtn').removeClass("bgYellow").addClass("bgRed");
+        console.log("should remove yellow");
     }
 })
 
@@ -322,6 +325,7 @@ $('#resumeBtn').on('click',()=>{
         isPaused = false;
         if (!hasResumed) {
             resumeTimer();
+            $('#stopBtn').removeClass("bgRed").addClass("bgYellow");
         }        
         $(front).on("click",flip);
     }
